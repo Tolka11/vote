@@ -20,6 +20,7 @@ spring:
     #    tcp: jdbc:h2:tcp://localhost:9092/mem:voting
     username: sa
     password:
+  h2.console.enabled: true
 
   # Jackson Serialization Issue Resolver
   jackson:
