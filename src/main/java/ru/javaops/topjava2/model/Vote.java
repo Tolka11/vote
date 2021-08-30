@@ -37,4 +37,11 @@ public class Vote extends NamedEntity {
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate date;
+
+    public Vote(Integer id, String name, String menu, Integer restaurantId, LocalDate date) {
+        super(id, name);
+        this.menu = menu;
+        this.restaurantId = restaurantId;
+        this.date = date;
+    }
 }

@@ -9,4 +9,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface VoteRepository extends BaseRepository<Vote> {
     public List<Vote> getAllByDateEquals(LocalDate date);
+
+    public Vote findByRestaurantIdAndDate(Integer restaurantId, LocalDate date);
 }
