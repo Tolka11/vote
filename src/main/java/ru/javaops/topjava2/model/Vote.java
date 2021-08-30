@@ -7,18 +7,27 @@ import ru.javaops.topjava2.util.validation.NoHtml;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "vote")
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "date"}, name = "vote_unique_restaurant_date_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
 public class Vote extends NamedEntity {
+
+    // Field "name" is used for name of restaurant
+
+    @NotBlank
+    @Size(min = 2, max = 1000)
+    @Column(name = "menu", nullable = false)
+    @NoHtml
+    private String menu;
 
     @NotNull
     @Column(name = "restaurant_id", nullable = false)
@@ -28,15 +37,4 @@ public class Vote extends NamedEntity {
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate date;
-
-    @NotBlank
-    @Size(min = 2, max = 1000)
-    @Column(name = "menu", nullable = false)
-    @NoHtml
-    private String menu;
-
-    @NotNull
-    @Column(name = "votes", nullable = false)
-    private Integer votes;
-
 }

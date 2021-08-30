@@ -1,18 +1,16 @@
 package ru.javaops.topjava2.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ru.javaops.topjava2.util.validation.NoHtml;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "address"}, name = "restaurant_unique_name_address_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,8 +27,8 @@ public class Restaurant extends NamedEntity {
     @NoHtml
     private String phone;
 
-    @NotNull
-    @Column(name = "last_vote_date", nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDate lastVoteDate;
+//    @NotNull
+//    @Column(name = "last_vote_date", nullable = false)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    private LocalDate lastVoteDate;
 }

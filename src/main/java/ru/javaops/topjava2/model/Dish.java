@@ -3,14 +3,14 @@ package ru.javaops.topjava2.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dish")
+@Table(name = "dish",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "restaurant_id", "date"}, name = "dish_unique_name_restaurant_date_idx")},
+        indexes = {@Index(name = "i_restaurant_date", columnList = "restaurant_id,date")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

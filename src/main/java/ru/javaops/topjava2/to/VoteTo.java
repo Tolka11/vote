@@ -17,6 +17,8 @@ public class VoteTo extends NamedTo {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // Field "name" is used for name of restaurant
+
     @NotNull
     private Integer restaurantId;
 
