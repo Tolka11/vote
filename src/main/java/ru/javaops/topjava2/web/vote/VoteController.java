@@ -32,6 +32,7 @@ public class VoteController {
 
     private final VoteRepository voteRepository;
     private final ChoiceRepository choiceRepository;
+
     private RatingMaker ratingMaker;
 
     @GetMapping
