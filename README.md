@@ -20,6 +20,16 @@
 
 #### create vote
 `curl -s -X POST -d "{\"name\":\"NewRestaurant\",\"lastVoteDate\":\"2001-01-20\",\"dishes\":[{\"name\":\"NewDonut\",\"date\":\"2021-08-01\",\"price\":1.11},{\"name\":\"NewTea\",\"date\":\"2021-08-01\",\"price\":0.43}]}" -H "Content-Type:application/json;charset=UTF-8" http://localhost:8080/api/admin/restaurants/4/vote --user admin@gmail.com:admin`
+
+#### get vote 
+`curl -s http://localhost:8080/api/profile/votes --user admin@gmail.com:admin`
+
+#### get vote rating
+`curl -s http://localhost:8080/api/profile/votes/rating --user admin@gmail.com:admin`
+
+#### voting by user for vote 3
+`curl -s -X PUT -H "Content-Type:application/json" http://localhost:8080/api/profile/votes/3 --user user@yandex.ru:password`
+
 ---------------
 #### register User
 `curl -s -i -X POST -d '{"name":"New User","email":"test@mail.ru","password":"test-password"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/topjava/rest/profile`
