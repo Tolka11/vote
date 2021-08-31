@@ -19,7 +19,6 @@ import ru.javaops.topjava2.repository.RestaurantRepository;
 import ru.javaops.topjava2.repository.VoteRepository;
 import ru.javaops.topjava2.to.RestaurantTo;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
@@ -76,7 +75,7 @@ public class AdminRestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(allEntries = true)
+    @CacheEvict(cacheNames = "restaurants", allEntries = true)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
@@ -109,28 +108,22 @@ public class AdminRestaurantController {
         log.info("create vote for restaurant {} with menu {}", id, restaurantTo.getDishes());
         StringBuilder menu = new StringBuilder();
         for (Dish dish : restaurantTo.getDishes()) {
-            menu.append(dish.getName() + " - " + String.format("%.2f", dish.getPrice()) + "; ");
+            menu.append(dish.getName() + " - " + String.format("%.2f", dish.getPrice()).replace(",", ".") + "; ");
             // Save each today dish, even it's not first save this dish per day
-            dish.setId(null);
-            dish.setDate(LocalDate.now());
-            try {
-                dishRepository.save(dish);
-            } catch (ConstraintViolationException cve) {
-                Dish old = dishRepository.findByNameAndRestaurantIdAndDate(dish.getName(), dish.getRestaurantId(), LocalDate.now());
-                dish.setId(old.getId());
-                dishRepository.save(dish);
+            if (dish.getDate() == null || dish.getDate().isBefore(LocalDate.now())) {
+                dish.setId(null);
             }
+            dish.setDate(LocalDate.now());
+            dish.setRestaurantId(id);
+            dishRepository.save(dish);
         }
         // Save today vote, even it's not first save this vote per day
         Vote vote = new Vote(null, restaurantTo.getName(), menu.toString(), id, LocalDate.now());
-        Vote created = null;
-        try {
-            created = voteRepository.save(vote);
-        } catch (ConstraintViolationException cve) {
+        if (restaurantTo.getLastVoteDate().equals(LocalDate.now())) {
             Vote old = voteRepository.findByRestaurantIdAndDate(id, LocalDate.now());
             vote.setId(old.getId());
-            created = voteRepository.save(vote);
         }
+        Vote created = voteRepository.save(vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/votes/{id}")
                 .buildAndExpand(created.getId()).toUri();

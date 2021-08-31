@@ -7,7 +7,7 @@
 `curl -s http://localhost:8080/api/restaurants/2 --user admin@gmail.com:admin`
 
 #### delete restaurant 2
-`curl -s -X DELETE http://localhost:8080/api/restaurants/2 --user admin@gmail.com:admin`
+`curl -s -X DELETE http://localhost:8080/api/admin/restaurants/2 --user admin@gmail.com:admin`
 
 #### create restaurant
 `curl -s -X POST -d "{\"name\":\"Pirozhok\",\"address\":\"Letnyaa str. 11\",\"phone\":\"111-11-11\"}" -H "Content-Type:application/json;charset=UTF-8" http://localhost:8080/api/admin/restaurants --user admin@gmail.com:admin`
@@ -15,7 +15,11 @@
 #### update restaurant
 `curl -s -X PUT -d "{\"id\":1,\"name\":\"Biggresst\",\"address\":\"Big ave. 1\",\"phone\":\"111-11-11\"}" -H "Content-Type:application/json" http://localhost:8080/api/admin/restaurants/1 --user admin@gmail.com:admin`
 
+#### get restaurant 3 WithLastMenu
+`curl -s http://localhost:8080/api/admin/restaurants/3/menu --user admin@gmail.com:admin`
 
+#### create vote
+`curl -s -X POST -d "{\"name\":\"NewRestaurant\",\"lastVoteDate\":\"2001-01-20\",\"dishes\":[{\"name\":\"NewDonut\",\"date\":\"2021-08-01\",\"price\":1.11},{\"name\":\"NewTea\",\"date\":\"2021-08-01\",\"price\":0.43}]}" -H "Content-Type:application/json;charset=UTF-8" http://localhost:8080/api/admin/restaurants/4/vote --user admin@gmail.com:admin`
 ---------------
 #### register User
 `curl -s -i -X POST -d '{"name":"New User","email":"test@mail.ru","password":"test-password"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/topjava/rest/profile`

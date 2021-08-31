@@ -1,7 +1,6 @@
 package ru.javaops.topjava2.model;
 
 import lombok.*;
-import ru.javaops.topjava2.util.validation.NoHtml;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,16 +18,9 @@ public class Restaurant extends NamedEntity {
 
     @Size(min = 2, max = 100)
     @Column(name = "address")
-    @NoHtml
     private String address;
 
     @Size(min = 2, max = 100)
     @Column(name = "phone")
-    @NoHtml
     private String phone;
-
-//    @NotNull
-//    @Column(name = "last_vote_date", nullable = false)
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//    private LocalDate lastVoteDate;
 }

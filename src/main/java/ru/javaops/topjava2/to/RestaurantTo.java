@@ -6,6 +6,7 @@ import lombok.Value;
 import ru.javaops.topjava2.model.Dish;
 import ru.javaops.topjava2.util.validation.NoHtml;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.time.LocalDate;
@@ -26,10 +27,10 @@ public class RestaurantTo extends NamedTo {
     @NoHtml
     private String phone;
 
-    @NoHtml
+    @NotNull
     private LocalDate lastVoteDate;
 
-    @NoHtml
+    @NotNull
     List<Dish> dishes;
 
     public RestaurantTo(Integer id, String name, String address, String phone, LocalDate lastVoteDate, List<Dish> dishes) {

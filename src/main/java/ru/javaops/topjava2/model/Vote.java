@@ -4,17 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ru.javaops.topjava2.util.validation.NoHtml;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "date"}, name = "vote_unique_restaurant_date_idx")})
+@Table(name = "vote",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "date"}, name = "vote_unique_restaurant_date_idx")},
+        indexes = {@Index(name = "i_date", columnList = "date")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
