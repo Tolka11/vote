@@ -121,7 +121,7 @@ public class AdminRestaurantController {
         Vote vote = new Vote(null, restaurantTo.getName(), menu.toString(), id, LocalDate.now());
         if (restaurantTo.getLastVoteDate().equals(LocalDate.now())) {
             Vote old = voteRepository.findByRestaurantIdAndDate(id, LocalDate.now());
-            vote.setId(old.getId());
+            vote.setId(old == null ? null : old.getId());
         }
         Vote created = voteRepository.save(vote);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()

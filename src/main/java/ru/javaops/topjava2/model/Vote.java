@@ -2,7 +2,6 @@ package ru.javaops.topjava2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import ru.javaops.topjava2.util.validation.NoHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -25,7 +24,6 @@ public class Vote extends NamedEntity {
     @NotBlank
     @Size(min = 2, max = 1000)
     @Column(name = "menu", nullable = false)
-    @NoHtml
     private String menu;
 
     @NotNull

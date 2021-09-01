@@ -8,14 +8,15 @@ VALUES ('USER', 1),
        ('USER', 2);
 
 INSERT INTO RESTAURANT (name, address, phone)
-VALUES ('Bigrest', 'Bolshaya str. 12', '888-88-88'),
+VALUES ('Bigrest', 'Bolshaya ave. 12', '888-88-88'),
        ('Middlecafe', 'Middle str. 5', '555-55-55'),
-       ('Littleponchik', 'Small str. 3', '333-33-33');
+       ('Littleponchik', 'Small str. 3', '333-33-33'),
+       ('Voting cafe', 'Vote str. 77', '777-77-77');
 
-INSERT INTO VOTE (name, restaurant_id, date, menu)
-VALUES ('Bigrest', 1, now(), 'Paste, tiramisu, wine - 20.00; '),
-       ('Middlecafe', 2, now(), 'Soup, cutlet, compote - 10.00; '),
-       ('Littleponchik', 3, now(), 'Donut - 1.00; Tea - 0.50; ');
+INSERT INTO VOTE (name, menu, restaurant_id, date)
+VALUES ('Bigrest', 'Paste, tiramisu, wine - 20.00; ', 1, now()),
+       ('Middlecafe', 'Soup, cutlet, compote - 10.00; ', 2, now()),
+       ('Littleponchik', 'Donut - 1.00; Tea - 0.50; ', 3, now());
 
 INSERT INTO DISH (name, restaurant_id, date, price)
 VALUES ('Paste, tiramisu, wine', 1, now(), 20.00),

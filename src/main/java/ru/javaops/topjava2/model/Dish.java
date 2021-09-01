@@ -28,4 +28,11 @@ public class Dish extends NamedEntity {
 
     @Column(name = "price")
     private double price;
+
+    public Dish(Integer id, String name, Integer restaurantId, LocalDate date, double price) {
+        super(id, name);
+        this.restaurantId = restaurantId;
+        this.date = date;
+        this.price = price;
+    }
 }

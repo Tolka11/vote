@@ -23,4 +23,10 @@ public class Restaurant extends NamedEntity {
     @Size(min = 2, max = 100)
     @Column(name = "phone")
     private String phone;
+
+    public Restaurant(Integer id, String name, String address, String phone) {
+        super(id, name);
+        this.address = address;
+        this.phone = phone;
+    }
 }
