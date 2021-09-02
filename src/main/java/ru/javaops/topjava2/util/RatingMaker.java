@@ -44,7 +44,7 @@ public class RatingMaker {
                 while (true) {
                     rating = calculateRating(LocalDate.now());
                     try {
-                        Thread.currentThread().sleep(300000);
+                        Thread.currentThread().sleep(60000);
                     } catch (InterruptedException e) {
                         log.info("rating maker stopped");
                     }

@@ -6,8 +6,6 @@ import ru.javaops.topjava2.to.RestaurantTo;
 import ru.javaops.topjava2.web.MatcherFactory;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RestaurantTestData {
@@ -27,8 +25,8 @@ public class RestaurantTestData {
     public static final Dish dish6 = new Dish(null, "Shaslyk", 4, LocalDate.now(), 1.5);
     public static final Dish dish7 = new Dish(null, "Beer", 4, LocalDate.now(), 2.33);
 
-    public static final List<Dish> dishes = new ArrayList<>(Arrays.asList(dish3, dish4));
-    public static final List<Dish> dishesForCreateVote = new ArrayList<>(Arrays.asList(dish5, dish6, dish7));
+    public static final List<Dish> dishes = List.of(dish3, dish4);
+    public static final List<Dish> dishesForCreateVote = List.of(dish5, dish6, dish7);
 
     public static final RestaurantTo restaurantTo3 = new RestaurantTo(RESTAURANT1_ID + 2, "Littleponchik", "Small str. 3", "333-33-33", LocalDate.now(), dishes);
     public static final RestaurantTo restaurantTo4 = new RestaurantTo(RESTAURANT1_ID + 3, "Voting cafe", "Vote str. 77", "777-77-77", LocalDate.now(), dishesForCreateVote);

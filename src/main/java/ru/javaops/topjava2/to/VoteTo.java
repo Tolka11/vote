@@ -3,7 +3,6 @@ package ru.javaops.topjava2.to;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
-import ru.javaops.topjava2.model.Vote;
 import ru.javaops.topjava2.util.validation.NoHtml;
 
 import javax.validation.constraints.NotBlank;
@@ -35,13 +34,6 @@ public class VoteTo extends NamedTo {
         super(id, name);
         this.restaurantId = restaurantId;
         this.menu = menu;
-        this.votes = votes;
-    }
-
-    public VoteTo(Vote vote, Integer votes) {
-        super(vote.getId(), vote.getName());
-        this.restaurantId = vote.getRestaurantId();
-        this.menu = vote.getMenu();
         this.votes = votes;
     }
 }

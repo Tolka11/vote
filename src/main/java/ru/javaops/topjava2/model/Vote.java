@@ -32,7 +32,7 @@ public class Vote extends NamedEntity {
 
     @Column(name = "date", nullable = false)
     @NotNull
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     private LocalDate date;
 
     public Vote(Integer id, String name, String menu, Integer restaurantId, LocalDate date) {

@@ -23,3 +23,8 @@ VALUES ('Paste, tiramisu, wine', 1, now(), 20.00),
        ('Soup, cutlet, compote', 2, now(), 10.00),
        ('Donut', 3, now(), 1.00),
        ('Tea', 3, now(), 0.50);
+
+INSERT INTO CHOICE (user_id, vote_id, date)
+VALUES (2, 1, now()),
+       (1, 2, now()),
+       (2, 3, now());

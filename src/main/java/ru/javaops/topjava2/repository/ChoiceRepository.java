@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ChoiceRepository extends BaseRepository<Choice> {
+    public List<Choice> findAllByUserIdAndDate(int userId, LocalDate date);
+
     public List<Choice> findAllByDate(LocalDate date);
 
     public List<Choice> findAllByDateOrderByIdAsc(LocalDate date);
