@@ -1,5 +1,11 @@
 package ru.javaops.topjava2.web.restaurant;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -29,6 +35,7 @@ import java.util.stream.Collectors;
 import static ru.javaops.topjava2.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.javaops.topjava2.util.validation.ValidationUtil.checkNew;
 
+@Tag(name = "Admin Restaurant Controller", description = "The Restaurant API for Admin")
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -41,6 +48,8 @@ public class AdminRestaurantController {
     private final DishRepository dishRepository;
     private final VoteRepository voteRepository;
 
+    @Operation(summary = "Get all restaurants", description = "Get all restaurants for Admin")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping
     @Cacheable(cacheNames = "restaurants")
     public List<Restaurant> getAll() {
@@ -48,22 +57,34 @@ public class AdminRestaurantController {
         return restaurantRepository.findAll();
     }
 
+    @Operation(summary = "Get restaurant by ID", description = "Get restaurant by ID")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> get(@PathVariable int id) {
+    public ResponseEntity<Restaurant> get(@Parameter(description = "Restaurant ID", schema = @Schema(type = "integer", defaultValue = "3"))
+                                          @PathVariable int id) {
         log.info("find restaurant by id: {}", id);
         return ResponseEntity.of(restaurantRepository.findById(id));
     }
 
+    @Operation(summary = "Delete restaurant by ID", description = "Delete restaurant by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Done"),
+            @ApiResponse(responseCode = "401", description = "This user is unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden for this user")})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(cacheNames = "restaurants", allEntries = true)
-    public void delete(@PathVariable int id) {
+    public void delete(@Parameter(description = "Restaurant ID", schema = @Schema(type = "integer", defaultValue = "4"))
+                       @PathVariable int id) {
         restaurantRepository.delete(id);
     }
 
+    @Operation(summary = "Create restaurant", description = "Create restaurant")
+    @ApiResponse(responseCode = "201", description = "Created")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict(cacheNames = "restaurants", allEntries = true)
-    public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> create(@Parameter(description = "Restaurant object", schema = @Schema(implementation = Restaurant.class))
+                                             @Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         checkNew(restaurant);
         Restaurant created = restaurantRepository.save(restaurant);
@@ -73,17 +94,25 @@ public class AdminRestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Operation(summary = "Update restaurant by ID", description = "Update restaurant by ID")
+    @ApiResponse(responseCode = "204", description = "Done")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(cacheNames = "restaurants", allEntries = true)
-    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
+    public void update(@Parameter(description = "Restaurant object", schema = @Schema(implementation = Restaurant.class))
+                       @Valid @RequestBody Restaurant restaurant,
+                       @Parameter(description = "Restaurant ID", schema = @Schema(type = "integer", defaultValue = "1"))
+                       @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
         restaurantRepository.save(restaurant);
     }
 
+    @Operation(summary = "Get restaurant with last menu by ID", description = "Get restaurant with last menu by ID")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping("/{id}/menu")
-    public ResponseEntity<RestaurantTo> getRestaurantWithLastMenu(@PathVariable int id) {
+    public ResponseEntity<RestaurantTo> getRestaurantWithLastMenu(@Parameter(description = "Restaurant ID", schema = @Schema(type = "integer", defaultValue = "3"))
+                                                                  @PathVariable int id) {
         log.info("find restaurant with last menu by id: {}", id);
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Restaurant with id " + id + " not found."));
@@ -102,9 +131,15 @@ public class AdminRestaurantController {
         return ResponseEntity.of(Optional.of(restaurantTo));
     }
 
+    @Operation(summary = "Create vote by restaurant ID",
+            description = "Create vote by restaurant ID. If lastVoteDate of restaurant is today, get today vote of this restaurant from database and update it")
+    @ApiResponse(responseCode = "201", description = "Created")
     @PostMapping(value = "/{id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict(cacheNames = "votes", allEntries = true)
-    public ResponseEntity<Vote> createVote(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
+    public ResponseEntity<Vote> createVote(@Parameter(description = "Restaurant object", schema = @Schema(implementation = RestaurantTo.class))
+                                           @Valid @RequestBody RestaurantTo restaurantTo,
+                                           @Parameter(description = "Restaurant ID", schema = @Schema(type = "integer", defaultValue = "1"))
+                                           @PathVariable int id) {
         log.info("create vote for restaurant {} with menu {}", id, restaurantTo.getDishes());
         StringBuilder menu = new StringBuilder();
         for (Dish dish : restaurantTo.getDishes()) {

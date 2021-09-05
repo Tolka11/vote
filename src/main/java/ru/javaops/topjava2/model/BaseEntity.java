@@ -1,6 +1,7 @@
 package ru.javaops.topjava2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
@@ -18,6 +19,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class BaseEntity implements Persistable<Integer>, HasId {
 
+    @Schema(description = "ID", example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;

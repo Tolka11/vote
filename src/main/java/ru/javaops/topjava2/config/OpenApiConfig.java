@@ -19,10 +19,10 @@ import org.springframework.context.annotation.Configuration;
 )
 @OpenAPIDefinition(
         info = @Info(
-                title = "REST API documentation",
+                title = "REST API documentation for voting system",
                 version = "1.0",
-                description = "Приложение по <a href='https://javaops.ru/view/topjava2'>курсу TopJava-2</a> (решение выпускного проекта)",
-                contact = @Contact(url = "https://javaops.ru/#contacts", name = "Grigory Kislin", email = "admin@javaops.ru")
+                description = "Приложение по <a href='https://github.com/Tolka11/vote'>выпускному проекту голосования за ланч</a> (на основе кода курса <a href='https://javaops.ru/view/topjava2'>TopJava-2</a>)",
+                contact = @Contact(url = "https://github.com/Tolka11", name = "Anatoliy Skrylnikov", email = "anatoliy.skrylnikov@gmail.com")
         ),
         security = @SecurityRequirement(name = "basicAuth")
 )

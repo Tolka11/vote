@@ -1,5 +1,10 @@
 package ru.javaops.topjava2.web.vote;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -26,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static ru.javaops.topjava2.util.validation.ValidationUtil.assureIdConsistent;
 
+@Tag(name = "Admin Vote Controller", description = "The Vote API for Admin")
 @RestController
 @RequestMapping(value = AdminVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -38,23 +44,32 @@ public class AdminVoteController {
 
     private RatingMaker ratingMaker;
 
+    @Operation(summary = "Get all voting positions by date", description = "Get all voting positions by date")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping
     @Cacheable
     public List<Vote> getAllByDate(@AuthenticationPrincipal AuthUser authUser,
+                                   @Parameter(description = "Date", schema = @Schema(defaultValue = "2021-09-05"))
                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get all votes for date {} by {}", date, authUser.getUser());
         return voteRepository.getAllByDateEquals(date);
     }
 
+    @Operation(summary = "Get vote by id", description = "Get vote by id")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping("/{id}")
     public ResponseEntity<Vote> get(@AuthenticationPrincipal AuthUser authUser,
+                                    @Parameter(description = "ID of vote item", schema = @Schema(type = "integer", defaultValue = "2"))
                                     @PathVariable int id) {
         log.info("get vote by id: {} by {}", id, authUser.getUser());
         return ResponseEntity.of(voteRepository.findById(id));
     }
 
+    @Operation(summary = "Get vote rating by date", description = "Get rating of voting positions by date")
+    @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping(value = "/rating")
     public List<VoteTo> getRatingByDate(@AuthenticationPrincipal AuthUser authUser,
+                                        @Parameter(description = "Date", schema = @Schema(defaultValue = "2021-09-05"))
                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get rating by date {} by user {}", date, authUser.getUser());
         List<VoteTo> voteRating = new ArrayList<>();
@@ -68,17 +83,24 @@ public class AdminVoteController {
                 .collect(Collectors.toList());
     }
 
+    @Operation(summary = "Delete vote position by id", description = "Delete vote position by id")
+    @ApiResponse(responseCode = "204", description = "Done")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(cacheNames = "votes", allEntries = true)
-    public void delete(@PathVariable int id) {
+    public void delete(@Parameter(description = "ID of vote item", schema = @Schema(type = "integer", defaultValue = "2")) @PathVariable int id) {
         voteRepository.delete(id);
     }
 
+    @Operation(summary = "Update vote position by id", description = "Update vote position by id")
+    @ApiResponse(responseCode = "204", description = "Done")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(cacheNames = "votes", allEntries = true)
-    public void update(@Valid @RequestBody Vote vote, @PathVariable int id) {
+    public void update(@Parameter(description = "Vote object", schema = @Schema(implementation = Vote.class))
+                       @Valid @RequestBody Vote vote,
+                       @Parameter(description = "ID of vote item", schema = @Schema(type = "integer", defaultValue = "1"))
+                       @PathVariable int id) {
         log.info("update {} with id={}", vote, id);
         assureIdConsistent(vote, id);
         voteRepository.save(vote);

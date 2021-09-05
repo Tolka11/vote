@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 @Component
 // https://programtalk.com/java/start-background-thread-using-spring-on/
 public class RatingMaker {
+    private final long TIMEOUT = 60 * 1000;         // 1 minute
 
     @Autowired
     private ChoiceRepository choiceRepository;
@@ -44,7 +45,7 @@ public class RatingMaker {
                 while (true) {
                     rating = calculateRating(LocalDate.now());
                     try {
-                        Thread.currentThread().sleep(60000);
+                        Thread.currentThread().sleep(TIMEOUT);
                     } catch (InterruptedException e) {
                         log.info("rating maker stopped");
                     }

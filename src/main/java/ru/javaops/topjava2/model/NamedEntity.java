@@ -1,5 +1,6 @@
 package ru.javaops.topjava2.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class NamedEntity extends BaseEntity {
 
+    @Schema(description = "Name", example = "Name")
     @NotBlank
     @Size(min = 2, max = 100)
     @Column(name = "name", nullable = false)

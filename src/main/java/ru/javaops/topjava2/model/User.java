@@ -1,6 +1,7 @@
 package ru.javaops.topjava2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
+@Schema(description = "User object")
 @Entity
 @Table(name = "users")
 @Getter
@@ -26,6 +28,7 @@ import java.util.Set;
 @ToString(callSuper = true, exclude = {"password"})
 public class User extends NamedEntity implements HasIdAndEmail {
 
+    @Schema(description = "E-mail", example = "user@gmail.com")
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
@@ -33,6 +36,7 @@ public class User extends NamedEntity implements HasIdAndEmail {
     @NoHtml   // https://stackoverflow.com/questions/17480809
     private String email;
 
+    @Schema(description = "Password", example = "qwerty")
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(min = 5, max = 100)
@@ -40,6 +44,7 @@ public class User extends NamedEntity implements HasIdAndEmail {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Schema(description = "Enabled", example = "true")
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
@@ -48,6 +53,7 @@ public class User extends NamedEntity implements HasIdAndEmail {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registered = new Date();
 
+    @Schema(description = "Set of roles")
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
