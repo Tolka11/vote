@@ -24,10 +24,13 @@ Spring/JPA application with authorization and role-based access rights without f
 ### REST API documentation: [Swagger on started application](localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/)
 > - Run Application `RestaurantVotingApplication` 
 > - Open API documentation by link: <a href="localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/">localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/</a>
-
+> 
+> Preset user : password
+>   - admin@gmail.com : admin
+>   - user@yandex.ru : password
 -------------------
 
-### Implementation features 
+## Implementation features
 
 #### H2 Database in memory with tables:
 - **USERS** - contains user records
@@ -69,23 +72,29 @@ Used to create voting rating by selected date, minimize accessing the database, 
 - Background thread that once per minute calculate today rating and store it in `private Map<Integer, Integer> rating`
 - Method `public Map<Integer, Integer> getRating()` that return stored rating. Vote Controller use it for create today rating 
 
-#### Creating Vote process by Admin
-- `Vote.class` object has a set of fields for minimize database access:
-  - **id**
-  - **name** - name of restaurant, show in voting list
-  - **menu** - show in voting list
-  - **restaurantId** - for make choice  
-  - **date** - date of vote
-- Admin get the restaurant with last menu from REST API, change dishes in menu and post restaurant with new menu to REST API 
-- Method `createVote` in `AdminRestaurantController` get each dish from menu and stores them into DB table DISH with today date. Also each dish converts to string `"dish_name - price; "` and appends in `StringBuilder menu`. For business lunch can be used only one `Dish.class` object, for exaple "Soup, cutlet, compote" with price 
-- Then creating `Vote.class` object with `StringBuilder menu`, save it in database
-- List of `Vote.class` objects for selected date is a voting list
+#### Model feauters
 
-#### Voting process by Users
+The main idea of model realisation is minimization database access. 
+
+There are two classes for store history of menu dishes and user choices and corresponding tables in database - DISH and CHOICE. 
+
+The most frequently requested data from database is daily voting list. This list creating from records of table VOTE represent by `Vote.class` objects for selected date. One such object is an option (variant) inside voting list and has minimum fields to support the voting process:
+  - **id**
+  - **name** - name of restaurant, for show to user in the voting list
+  - **menu** - for show to user in the voting list, one String field, includes dish names with price, separated by semicolons
+  - **restaurantId** - for make choice restaurant by id 
+  - **date** - date of vote, to create voting list  for selected date
+
+Admin creates Vote objects: 
+- Admin get the restaurant with last menu from REST API, change dishes in menu and post restaurant with new menu to REST API 
+- Method `createVote` in `AdminRestaurantController` get each dish from menu and stores them into DB table DISH with today date. Also, each dish converts to string `"dish_name - price; "` and appends in `StringBuilder menu`. For business lunch can be used only one `Dish.class` object, for example "Soup, cutlet, compote" with price. `Dish.class` objects save history of changing menu for each restaurant and could be use in future
+- Then creating `Vote.class` object with `StringBuilder menu`, save it in database
+
+Voting process by Users:
 - User vote for the restaurant
 - Method `makeChoice` in `VoteController` checks if it's the revote after 11-00, throw exception
 - Else it creates new `Choice.class` object, and save it in database
-
+- `Choice.class` objects save history of user choices and could be use in future
 
 -------------------
 
